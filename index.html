@@ -8,728 +8,96 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-            font-family: 'Oswald', Arial, sans-serif;
-            color: #000000;
-            font-weight: 500;
-            padding: 20px;
-        }
-
-        .page-container {
-            width: 100%;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        .page-header {
-            background-color: #004080;
-            color: #ffffff;
-            padding: 25px 30px;
-            text-align: center;
-            margin-bottom: 15px;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .logo-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            margin-bottom: 15px;
-        }
-
-        .logo-box {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-box img {
-            width: 100px;
-            height: auto;
-            border-radius: 6px;
-        }
-
-        .page-header h3 {
-            margin: 12px 0 5px;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: #ffffff;
-        }
-
-        .page-header .tagline {
-            margin: 0;
-            font-size: 10px;
-            font-weight: 500;
-            color: #ffffff;
-        }
-
-        .page-header h1 {
-            margin: 20px 0 10px;
-            font-size: 24px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-
-        .page-header .subtitle {
-            font-size: 14px;
-            color: #ffffff;
-            font-weight: 500;
-        }
-
-        .content-card {
-            border: 4px double #004080;
-            border-radius: 12px;
-            padding: 12px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-        }
-
-        .content-inner {
-            padding: 25px;
-        }
-
-        .upload-section {
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 8px;
-            border: 2px dashed #004080;
-            text-align: center;
-            margin: 1.5rem 0;
-            transition: all 0.3s ease;
-        }
-
-        .upload-section:hover {
-            border-color: #0056b3;
-            background: #e7f3ff;
-        }
-
-        .upload-section h3 {
-            color: #004080;
-            margin-bottom: 1rem;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .upload-section p {
-            color: #000000;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            background: #004080;
-            color: white;
-            padding: 14px 24px;
-            border-radius: 6px;
-            border: 2px solid #004080;
-            font-size: 14px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-family: 'Oswald', Arial, sans-serif;
-            margin-top: 1rem;
-        }
-
-        .file-input-wrapper:hover {
-            background: #0056b3;
-            border-color: #0056b3;
-        }
-
-        .file-input-wrapper input[type="file"] {
-            position: absolute;
-            left: -9999px;
-        }
-
-        .section-header {
-            background-color: #004080;
-            color: #ffffff;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .section-icon {
-            background: #ffffff;
-            color: #004080;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 0.75rem;
-            margin: 1.5rem 0;
-        }
-
-        .stats-card {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border: 2px solid #004080;
-            transition: all 0.2s;
-        }
-
-        .stats-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 64, 128, 0.2);
-        }
-
-        .stats-card h4 {
-            color: #666;
-            font-size: 11px;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-        }
-
-        .stats-card .metric-value {
-            font-size: 1.6rem;
-            color: #004080;
-            margin-bottom: 0.25rem;
-            font-weight: 700;
-        }
-
-        .stats-card p {
-            color: #666;
-            font-size: 11px;
-        }
-
-        .stats-card.warning .metric-value {
-            color: #dc3545;
-        }
-
-        .stats-card.success .metric-value {
-            color: #28a745;
-        }
-
-        .stats-card.info .metric-value {
-            color: #17a2b8;
-        }
-
-        .btn {
-            padding: 14px 24px;
-            border: 2px solid #004080;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-family: 'Oswald', Arial, sans-serif;
-            transition: all 0.2s;
-            margin: 5px;
-        }
-
-        .btn-primary {
-            background: #004080;
-            color: #ffffff;
-        }
-
-        .btn-primary:hover {
-            background: #0056b3;
-            border-color: #0056b3;
-        }
-
-        .btn-secondary {
-            background: #ffffff;
-            color: #004080;
-        }
-
-        .btn-secondary:hover {
-            background: #004080;
-            color: #ffffff;
-        }
-
-        .btn-gold {
-            background: #ffc107;
-            color: #000000;
-            border-color: #ffc107;
-        }
-
-        .btn-gold:hover {
-            background: #e0a800;
-            border-color: #e0a800;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: #ffffff;
-            border-color: #28a745;
-        }
-
-        .btn-success:hover {
-            background: #218838;
-            border-color: #218838;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: #ffffff;
-            border-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-            border-color: #c82333;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 6px;
-            margin: 1rem 0;
-            font-weight: 500;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            border: 2px solid #28a745;
-            color: #155724;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            border: 2px solid #dc3545;
-            color: #721c24;
-        }
-
-        .alert-info {
-            background: #e7f3ff;
-            border: 2px solid #004080;
-            color: #004080;
-        }
-
-        .alert-warning {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            color: #856404;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-            color: #004080;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #004080;
-            border-radius: 6px;
-            font-size: 14px;
-            background: #ffffff;
-            color: #000000;
-            font-family: 'Oswald', Arial, sans-serif;
-            font-weight: 500;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #0056b3;
-            box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1);
-        }
-
-        .config-card {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 2px solid #004080;
-            margin: 1rem 0;
-        }
-
-        .config-card h4 {
-            color: #004080;
-            margin-bottom: 1rem;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .loading-spinner {
-            border: 4px solid #e7f3ff;
-            border-top: 4px solid #004080;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .page-footer {
-            background-color: #004080;
-            color: #ffffff;
-            padding: 20px 30px;
-            text-align: center;
-            font-size: 13px;
-            line-height: 1.7;
-            font-weight: 500;
-            border-radius: 0 0 8px 8px;
-        }
-
-        .page-footer p {
-            margin: 6px 0 0;
-            font-size: 12px;
-            color: #ffffff;
-        }
-
-        .table-container {
-            max-height: 400px;
-            overflow: auto;
-            border: 2px solid #004080;
-            border-radius: 6px;
-            margin-top: 1rem;
-        }
-
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .results-table th {
-            background: #004080;
-            color: #ffffff;
-            padding: 0.75rem;
-            text-align: left;
-            font-weight: 700;
-            position: sticky;
-            top: 0;
-        }
-
-        .results-table td {
-            padding: 0.5rem 0.75rem;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .results-table tr:nth-child(even) {
-            background: #f8f9fa;
-        }
-
-        .results-table tr:hover {
-            background: #e7f3ff;
-        }
-
-        .column-card {
-            background: #ffffff;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
-
-        .column-card.has-issues {
-            border-color: #dc3545;
-        }
-
-        .column-card.no-issues {
-            border-color: #28a745;
-        }
-
-        .column-header {
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .column-header:hover {
-            background: #f8f9fa;
-        }
-
-        .column-header.numeric {
-            background: #e7f3ff;
-            border-bottom: 2px solid #004080;
-        }
-
-        .column-header.categorical {
-            background: #fff3cd;
-            border-bottom: 2px solid #ffc107;
-        }
-
-        .column-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: #004080;
-        }
-
-        .column-type-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .badge-numeric {
-            background: #004080;
-            color: #fff;
-        }
-
-        .badge-categorical {
-            background: #ffc107;
-            color: #000;
-        }
-
-        .column-body {
-            padding: 1.5rem;
-            display: none;
-        }
-
-        .column-body.expanded {
-            display: block;
-        }
-
-        .issue-tag {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            margin: 2px;
-        }
-
-        .issue-critical {
-            background: #dc3545;
-            color: #fff;
-        }
-
-        .issue-warning {
-            background: #ffc107;
-            color: #000;
-        }
-
-        .issue-info {
-            background: #17a2b8;
-            color: #fff;
-        }
-
-        .issue-success {
-            background: #28a745;
-            color: #fff;
-        }
-
-        .stats-mini-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .stats-mini {
-            background: #f8f9fa;
-            padding: 0.75rem;
-            border-radius: 6px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        .stats-mini .label {
-            font-size: 10px;
-            color: #666;
-            text-transform: uppercase;
-        }
-
-        .stats-mini .value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #004080;
-        }
-
-        .value-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 0.5rem 0;
-        }
-
-        .value-chip {
-            background: #e7f3ff;
-            border: 1px solid #004080;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .value-chip.problematic {
-            background: #f8d7da;
-            border-color: #dc3545;
-            color: #721c24;
-        }
-
-        .value-chip .count {
-            background: #004080;
-            color: #fff;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-
-        .value-chip.problematic .count {
-            background: #dc3545;
-        }
-
-        .spelling-group {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 0.5rem 0;
-        }
-
-        .spelling-group h5 {
-            color: #856404;
-            font-size: 13px;
-            margin-bottom: 0.5rem;
-        }
-
-        .expand-icon {
-            font-size: 20px;
-            color: #004080;
-            transition: transform 0.3s;
-        }
-
-        .expand-icon.rotated {
-            transform: rotate(180deg);
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid #004080;
-            margin-bottom: 1rem;
-        }
-
-        .tab {
-            padding: 12px 24px;
-            cursor: pointer;
-            font-weight: 700;
-            color: #004080;
-            border: 2px solid transparent;
-            border-bottom: none;
-            margin-bottom: -2px;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            background: #e7f3ff;
-        }
-
-        .tab.active {
-            background: #004080;
-            color: #fff;
-            border-color: #004080;
-            border-radius: 6px 6px 0 0;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .issue-summary-box {
-            background: #f8d7da;
-            border: 2px solid #dc3545;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-
-        .issue-summary-box.clean {
-            background: #d4edda;
-            border-color: #28a745;
-        }
-
-        .issue-summary-box h4 {
-            margin-bottom: 0.5rem;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f8f9fa;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #004080;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            .content-inner {
-                padding: 15px;
-            }
-            .page-header h1 {
-                font-size: 20px;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #ffffff; font-family: 'Oswald', Arial, sans-serif; color: #000000; font-weight: 500; padding: 20px; }
+        .page-container { width: 100%; max-width: 1400px; margin: 0 auto; }
+        .page-header { background-color: #004080; color: #ffffff; padding: 25px 30px; text-align: center; margin-bottom: 15px; border-radius: 8px 8px 0 0; }
+        .logo-row { display: flex; justify-content: center; align-items: center; gap: 30px; margin-bottom: 15px; }
+        .logo-box { background: #ffffff; border-radius: 8px; padding: 10px; }
+        .logo-box img { width: 100px; height: auto; border-radius: 6px; }
+        .page-header h3 { margin: 12px 0 5px; font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+        .page-header .tagline { margin: 0; font-size: 10px; font-weight: 500; }
+        .page-header h1 { margin: 20px 0 10px; font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+        .page-header .subtitle { font-size: 14px; font-weight: 500; }
+        .content-card { border: 4px double #004080; border-radius: 12px; padding: 12px; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .content-inner { padding: 25px; }
+        .upload-section { background: #f8f9fa; padding: 2rem; border-radius: 8px; border: 2px dashed #004080; text-align: center; margin: 1.5rem 0; }
+        .upload-section:hover { border-color: #0056b3; background: #e7f3ff; }
+        .upload-section h3 { color: #004080; margin-bottom: 1rem; font-size: 18px; font-weight: 700; }
+        .file-input-wrapper { display: inline-block; cursor: pointer; background: #004080; color: white; padding: 14px 24px; border-radius: 6px; font-size: 14px; font-weight: 700; text-transform: uppercase; font-family: 'Oswald', sans-serif; margin-top: 1rem; }
+        .file-input-wrapper:hover { background: #0056b3; }
+        .file-input-wrapper input[type="file"] { position: absolute; left: -9999px; }
+        .section-header { background-color: #004080; color: #ffffff; padding: 15px 20px; margin-bottom: 20px; border-radius: 6px; display: flex; align-items: center; gap: 15px; }
+        .section-icon { background: #ffffff; color: #004080; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+        .section-title { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin: 1.5rem 0; }
+        .stats-card { background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center; border: 2px solid #004080; }
+        .stats-card h4 { color: #666; font-size: 11px; margin-bottom: 0.5rem; text-transform: uppercase; }
+        .stats-card .metric-value { font-size: 1.6rem; color: #004080; font-weight: 700; }
+        .stats-card p { color: #666; font-size: 11px; }
+        .stats-card.warning .metric-value { color: #dc3545; }
+        .stats-card.success .metric-value { color: #28a745; }
+        .btn { padding: 14px 24px; border: 2px solid #004080; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; margin: 5px; }
+        .btn-primary { background: #004080; color: #ffffff; }
+        .btn-primary:hover { background: #0056b3; }
+        .btn-secondary { background: #ffffff; color: #004080; }
+        .btn-secondary:hover { background: #004080; color: #ffffff; }
+        .btn-gold { background: #ffc107; color: #000000; border-color: #ffc107; }
+        .btn-gold:hover { background: #e0a800; }
+        .btn-success { background: #28a745; color: #ffffff; border-color: #28a745; }
+        .btn-success:hover { background: #218838; }
+        .alert { padding: 1rem; border-radius: 6px; margin: 1rem 0; font-weight: 500; }
+        .alert-success { background: #d4edda; border: 2px solid #28a745; color: #155724; }
+        .alert-error { background: #f8d7da; border: 2px solid #dc3545; color: #721c24; }
+        .alert-info { background: #e7f3ff; border: 2px solid #004080; color: #004080; }
+        .hidden { display: none !important; }
+        .config-card { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border: 2px solid #004080; margin: 1rem 0; }
+        .config-card h4 { color: #004080; margin-bottom: 1rem; font-size: 16px; font-weight: 700; }
+        .loading-spinner { border: 4px solid #e7f3ff; border-top: 4px solid #004080; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .page-footer { background-color: #004080; color: #ffffff; padding: 20px 30px; text-align: center; font-size: 13px; line-height: 1.7; border-radius: 0 0 8px 8px; }
+        .page-footer p { margin: 6px 0 0; font-size: 12px; }
+        .table-container { max-height: 500px; overflow: auto; border: 2px solid #004080; border-radius: 6px; }
+        .results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .results-table th { background: #004080; color: #ffffff; padding: 0.75rem; text-align: left; font-weight: 700; position: sticky; top: 0; }
+        .results-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #ddd; }
+        .results-table tr:nth-child(even) { background: #f8f9fa; }
+        .results-table tr:hover { background: #e7f3ff; }
+        .column-card { background: #ffffff; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 1rem; overflow: hidden; }
+        .column-card.has-issues { border-color: #dc3545; }
+        .column-card.no-issues { border-color: #28a745; }
+        .column-header { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .column-header:hover { background: #f8f9fa; }
+        .column-header.numeric { background: #e7f3ff; border-bottom: 2px solid #004080; }
+        .column-header.categorical { background: #fff3cd; border-bottom: 2px solid #ffc107; }
+        .column-name { font-size: 16px; font-weight: 700; color: #004080; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-left: 8px; }
+        .badge-numeric { background: #004080; color: #fff; }
+        .badge-categorical { background: #ffc107; color: #000; }
+        .badge-clean { background: #28a745; color: #fff; }
+        .badge-issues { background: #dc3545; color: #fff; }
+        .column-body { padding: 1.5rem; display: none; }
+        .column-body.expanded { display: block; }
+        .expand-icon { font-size: 20px; color: #004080; transition: transform 0.3s; }
+        .expand-icon.rotated { transform: rotate(180deg); }
+        .issue-box { background: #f8d7da; border: 2px solid #dc3545; border-radius: 6px; padding: 1rem; margin: 0.5rem 0; }
+        .issue-box h5 { color: #721c24; margin-bottom: 0.5rem; }
+        .value-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0.5rem 0; }
+        .value-chip { background: #e7f3ff; border: 1px solid #004080; padding: 4px 10px; border-radius: 15px; font-size: 12px; }
+        .value-chip .count { background: #004080; color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 700; margin-left: 5px; }
+        .value-chip.bad { background: #f8d7da; border-color: #dc3545; }
+        .value-chip.bad .count { background: #dc3545; }
+        .case-group { background: #fff3cd; border: 2px solid #ffc107; border-radius: 6px; padding: 0.75rem; margin: 0.5rem 0; }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin: 1rem 0; }
+        .stat-item { background: #f8f9fa; padding: 0.5rem; border-radius: 6px; text-align: center; border: 1px solid #ddd; }
+        .stat-item .label { font-size: 10px; color: #666; text-transform: uppercase; }
+        .stat-item .value { font-size: 16px; font-weight: 700; color: #004080; }
+        .tabs { display: flex; border-bottom: 2px solid #004080; margin-bottom: 1rem; }
+        .tab { padding: 12px 24px; cursor: pointer; font-weight: 700; color: #004080; border: 2px solid transparent; border-bottom: none; margin-bottom: -2px; }
+        .tab:hover { background: #e7f3ff; }
+        .tab.active { background: #004080; color: #fff; border-color: #004080; border-radius: 6px 6px 0 0; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
 <body>
@@ -740,23 +108,21 @@
                     <img src="https://github.com/mohamedsillahkanu/gdp-dashboard-2/raw/6c7463b0d5c3be150aafae695a4bcbbd8aeb1499/ICF-SL.jpg" alt="ICF-SL Logo">
                 </div>
             </div>
-            <h3>Informatics Consultancy Firm-Sierra Leone<br>(ICF-SL)</h3>
+            <h3>Informatics Consultancy Firm-Sierra Leone (ICF-SL)</h3>
             <p class="tagline"><em>Driving Data-Driven Solutions for Health and Development</em></p>
             <h1>DATA DIAGNOSTICS TOOL</h1>
-            <p class="subtitle">Validate Numeric & Categorical Data Quality | Detect Spelling Inconsistencies</p>
+            <p class="subtitle">Quick Data Quality Check | Case Variations & Invalid Values</p>
         </div>
 
         <div class="content-card">
             <div class="content-inner">
-
-                <!-- Alert Container -->
                 <div id="alertContainer"></div>
 
                 <!-- Upload Section -->
                 <div id="uploadSection">
                     <div class="upload-section">
                         <h3>📁 UPLOAD YOUR DATA FILE</h3>
-                        <p>Upload a CSV or Excel file to run diagnostics on all columns</p>
+                        <p>Upload a CSV or Excel file to run quick diagnostics</p>
                         <label class="file-input-wrapper">
                             Choose Data File
                             <input type="file" id="dataFileInput" accept=".csv,.xlsx,.xls">
@@ -769,70 +135,28 @@
                         <p style="text-align: center;">Processing your file...</p>
                     </div>
 
-                    <!-- What This Tool Does -->
                     <div class="config-card">
                         <h4>🔍 What This Tool Checks</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
                             <div style="background: #e7f3ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #004080;">
                                 <h5 style="color: #004080; margin-bottom: 0.5rem;">📊 NUMERIC COLUMNS</h5>
-                                <ul style="color: #000; font-size: 13px; padding-left: 1.2rem; line-height: 1.8;">
-                                    <li>Detects non-numeric values (text in number columns)</li>
-                                    <li>Allows NA, N/A, null, empty, - as valid missing values</li>
-                                    <li>Flags ANY other text as an issue</li>
-                                    <li>Provides summary statistics (mean, median, min, max, std)</li>
-                                    <li>Shows distribution of values</li>
+                                <p style="font-size: 13px; margin-bottom: 0.5rem;"><strong>Definition:</strong> ALL values must be numbers or NA</p>
+                                <ul style="font-size: 13px; padding-left: 1.2rem; line-height: 1.8;">
+                                    <li>Count of valid numbers</li>
+                                    <li>Count of NA/missing values</li>
+                                    <li>If ANY text exists → Categorical</li>
                                 </ul>
                             </div>
                             <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; border-left: 4px solid #ffc107;">
                                 <h5 style="color: #856404; margin-bottom: 0.5rem;">🏷️ CATEGORICAL COLUMNS</h5>
-                                <ul style="color: #000; font-size: 13px; padding-left: 1.2rem; line-height: 1.8;">
-                                    <li>Case sensitivity check (January ≠ JANUARY ≠ january)</li>
-                                    <li>Detects potential spelling variations</li>
-                                    <li>Groups similar values together</li>
-                                    <li>Shows value frequency distribution</li>
-                                    <li>Identifies leading/trailing spaces</li>
+                                <p style="font-size: 13px; margin-bottom: 0.5rem;"><strong>Definition:</strong> Contains any text values</p>
+                                <ul style="font-size: 13px; padding-left: 1.2rem; line-height: 1.8;">
+                                    <li>List of unique values</li>
+                                    <li><strong>Flags case variations</strong></li>
+                                    <li>e.g., "January" vs "january" ⚠️</li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Configuration Section -->
-                <div id="configSection" class="hidden">
-                    <div class="section-header">
-                        <span class="section-icon">⚙</span>
-                        <span class="section-title">CONFIGURE COLUMN TYPES</span>
-                    </div>
-
-                    <div class="alert alert-info">
-                        <strong>Auto-Detection:</strong> Column types have been automatically detected. Review and adjust if needed before running diagnostics.
-                    </div>
-
-                    <div class="config-card">
-                        <h4>Column Type Assignment</h4>
-                        <p style="color: #666; font-size: 13px; margin-bottom: 1rem;">
-                            Specify whether each column should be treated as NUMERIC or CATEGORICAL for diagnostics.
-                        </p>
-                        <div class="table-container" style="max-height: 350px;">
-                            <table class="results-table" id="columnTypeTable">
-                                <thead>
-                                    <tr>
-                                        <th>Column Name</th>
-                                        <th>Sample Values</th>
-                                        <th>Detected Type</th>
-                                        <th>Override Type</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="columnTypeBody">
-                                    <!-- Populated dynamically -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div style="text-align: center; margin-top: 1.5rem;">
-                        <button class="btn btn-gold" onclick="runDiagnostics()">🔍 Run Diagnostics</button>
-                        <button class="btn btn-secondary" onclick="resetAll()">Start Over</button>
                     </div>
                 </div>
 
@@ -840,12 +164,11 @@
                 <div id="processingSection" class="hidden">
                     <div class="section-header">
                         <span class="section-icon">⏳</span>
-                        <span class="section-title">RUNNING DIAGNOSTICS</span>
+                        <span class="section-title">PROCESSING</span>
                     </div>
                     <div class="config-card" style="text-align: center;">
                         <div class="loading-spinner"></div>
-                        <p style="margin-top: 1rem; font-weight: 700; color: #004080;">Analyzing all columns...</p>
-                        <p id="processingStatus" style="color: #666; font-size: 13px;"></p>
+                        <p id="processingStatus" style="margin-top: 1rem; font-weight: 700; color: #004080;">Analyzing columns...</p>
                     </div>
                 </div>
 
@@ -856,1006 +179,748 @@
                         <span class="section-title">DIAGNOSTIC RESULTS</span>
                     </div>
 
-                    <!-- Overall Summary -->
-                    <div class="stats-grid" id="overallStats">
-                        <!-- Populated dynamically -->
-                    </div>
+                    <div class="stats-grid" id="overallStats"></div>
 
-                    <!-- Issue Summary -->
-                    <div id="issueSummaryContainer"></div>
+                    <div id="summaryBox"></div>
 
-                    <!-- Tabs for Numeric/Categorical -->
                     <div class="tabs">
-                        <div class="tab active" onclick="switchTab('numeric')">📊 Numeric Columns</div>
-                        <div class="tab" onclick="switchTab('categorical')">🏷️ Categorical Columns</div>
-                        <div class="tab" onclick="switchTab('issues')">⚠️ All Issues</div>
+                        <div class="tab active" onclick="switchTab('numeric')">📊 Numeric</div>
+                        <div class="tab" onclick="switchTab('mixed')">🔧 Fix Mixed</div>
+                        <div class="tab" onclick="switchTab('categorical')">🏷️ Categorical</div>
+                        <div class="tab" onclick="switchTab('issues')">⚠️ Case Issues</div>
                     </div>
 
-                    <!-- Numeric Tab -->
-                    <div id="numericTab" class="tab-content active">
-                        <div id="numericResults">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
+                    <div id="numericTab" class="tab-content active"></div>
+                    <div id="mixedTab" class="tab-content"></div>
+                    <div id="categoricalTab" class="tab-content"></div>
+                    <div id="issuesTab" class="tab-content"></div>
 
-                    <!-- Categorical Tab -->
-                    <div id="categoricalTab" class="tab-content">
-                        <div id="categoricalResults">
-                            <!-- Populated dynamically -->
-                        </div>
+                    <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background:#f8f9fa; border-radius:8px; border:2px solid #004080;">
+                        <p style="margin-bottom:1rem; color:#004080;"><strong>Ready to clean your data?</strong> Review your selections above, then click the button below.</p>
+                        <button class="btn btn-gold" onclick="applyFixesAndDownload()" style="font-size:16px; padding:16px 32px;">🔧 Apply Selected Fixes & Download Cleaned Data</button>
                     </div>
-
-                    <!-- Issues Tab -->
-                    <div id="issuesTab" class="tab-content">
-                        <div id="allIssuesResults">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <div style="text-align: center; margin: 2rem 0;">
+                    <div style="text-align: center; margin: 1rem 0;">
                         <button class="btn btn-success" onclick="downloadReport()">📥 Download Report (Excel)</button>
                         <button class="btn btn-primary" onclick="downloadIssuesCSV()">📥 Download Issues (CSV)</button>
-                        <button class="btn btn-secondary" onclick="backToConfig()">Change Settings</button>
                         <button class="btn btn-secondary" onclick="resetAll()">Start Over</button>
                     </div>
                 </div>
-
             </div>
         </div>
 
         <div class="page-footer">
             <p style="margin: 0; font-weight: 700;">National Malaria Control Programme</p>
             <p>Ministry of Health and Sanitation, Sierra Leone</p>
-            <p style="font-size: 11px;">Medical Stores Compound, Freetown, Sierra Leone</p>
             <p style="font-size: 10px;">© 2025 Informatics Consultancy Firm-Sierra Leone (ICF-SL)</p>
         </div>
     </div>
 
     <script>
-        // Global variables
         let rawData = null;
-        let availableColumns = [];
-        let columnTypes = {};
-        let diagnosticResults = {};
+        let cleanedData = null;
+        let columns = [];
+        let results = { numeric: {}, categorical: {}, mixed: {}, issues: [] };
         let fileName = '';
+        let corrections = { replacements: {}, deletions: {} }; // Track corrections to apply
 
-        // Valid NA values for numeric columns
-        const validNAValues = ['', 'na', 'n/a', 'null', 'none', '-', '.', 'missing', 'undefined', 'nil'];
+        // Valid NA values
+        const NA_VALUES = ['', 'na', 'n/a', 'null', 'none', '-', '.', 'missing', 'undefined', 'nil', '#n/a', '#na'];
 
-        // Initialize event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('dataFileInput').addEventListener('change', handleFileUpload);
-        });
+        document.getElementById('dataFileInput').addEventListener('change', handleFileUpload);
 
-        function showAlert(message, type = 'info') {
-            const alertContainer = document.getElementById('alertContainer');
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.innerHTML = message;
-            
-            alertContainer.innerHTML = '';
-            alertContainer.appendChild(alertDiv);
-            
-            setTimeout(() => {
-                if (alertDiv.parentNode) {
-                    alertDiv.parentNode.removeChild(alertDiv);
-                }
-            }, 5000);
+        function showAlert(msg, type = 'info') {
+            const container = document.getElementById('alertContainer');
+            container.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
         }
 
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
             if (!file) return;
-
             fileName = file.name;
-            const fileExtension = fileName.split('.').pop().toLowerCase();
-
+            const ext = fileName.split('.').pop().toLowerCase();
             document.getElementById('uploadProgress').classList.remove('hidden');
 
-            if (fileExtension === 'csv') {
+            if (ext === 'csv') {
                 Papa.parse(file, {
                     header: true,
                     skipEmptyLines: true,
-                    complete: function(results) {
-                        rawData = results.data;
-                        availableColumns = Object.keys(results.data[0] || {});
-                        document.getElementById('dataFileName').textContent = `✓ Loaded: ${fileName} (${results.data.length} rows, ${availableColumns.length} columns)`;
+                    complete: r => {
+                        rawData = r.data;
+                        columns = Object.keys(rawData[0] || {});
+                        document.getElementById('dataFileName').textContent = `✓ ${fileName} (${rawData.length} rows, ${columns.length} columns)`;
                         document.getElementById('uploadProgress').classList.add('hidden');
-                        detectColumnTypes();
-                        showConfigSection();
-                    },
-                    error: function(error) {
-                        showAlert('Error reading CSV: ' + error.message, 'error');
-                        document.getElementById('uploadProgress').classList.add('hidden');
+                        runDiagnostics();
                     }
                 });
-            } else if (['xlsx', 'xls'].includes(fileExtension)) {
+            } else {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    try {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, {type: 'array'});
-                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        rawData = XLSX.utils.sheet_to_json(firstSheet);
-                        availableColumns = Object.keys(rawData[0] || {});
-                        document.getElementById('dataFileName').textContent = `✓ Loaded: ${fileName} (${rawData.length} rows, ${availableColumns.length} columns)`;
-                        document.getElementById('uploadProgress').classList.add('hidden');
-                        detectColumnTypes();
-                        showConfigSection();
-                    } catch (error) {
-                        showAlert('Error reading Excel: ' + error.message, 'error');
-                        document.getElementById('uploadProgress').classList.add('hidden');
-                    }
+                    const wb = XLSX.read(new Uint8Array(e.target.result), {type: 'array'});
+                    rawData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                    columns = Object.keys(rawData[0] || {});
+                    document.getElementById('dataFileName').textContent = `✓ ${fileName} (${rawData.length} rows, ${columns.length} columns)`;
+                    document.getElementById('uploadProgress').classList.add('hidden');
+                    runDiagnostics();
                 };
                 reader.readAsArrayBuffer(file);
-            } else {
-                showAlert('Please upload a CSV or Excel file', 'error');
-                document.getElementById('uploadProgress').classList.add('hidden');
             }
-        }
-
-        function detectColumnTypes() {
-            columnTypes = {};
-            
-            availableColumns.forEach(col => {
-                // Sample non-empty values
-                const sampleValues = rawData
-                    .map(row => row[col])
-                    .filter(v => v !== null && v !== undefined && String(v).trim() !== '')
-                    .slice(0, 100);
-                
-                // Count numeric vs non-numeric
-                let numericCount = 0;
-                let textCount = 0;
-                
-                sampleValues.forEach(val => {
-                    const strVal = String(val).trim().toLowerCase();
-                    if (validNAValues.includes(strVal)) {
-                        // NA values don't count either way
-                    } else if (!isNaN(parseFloat(val)) && isFinite(val)) {
-                        numericCount++;
-                    } else {
-                        textCount++;
-                    }
-                });
-                
-                // If more than 80% are numeric, treat as numeric
-                const total = numericCount + textCount;
-                if (total > 0 && (numericCount / total) > 0.8) {
-                    columnTypes[col] = 'numeric';
-                } else {
-                    columnTypes[col] = 'categorical';
-                }
-            });
-        }
-
-        function showConfigSection() {
-            document.getElementById('uploadSection').classList.add('hidden');
-            document.getElementById('configSection').classList.remove('hidden');
-            
-            populateColumnTypeTable();
-            showAlert('File loaded! Review column types and run diagnostics.', 'success');
-        }
-
-        function populateColumnTypeTable() {
-            const tbody = document.getElementById('columnTypeBody');
-            tbody.innerHTML = '';
-            
-            availableColumns.forEach(col => {
-                // Get sample values
-                const sampleValues = rawData
-                    .map(row => row[col])
-                    .filter(v => v !== null && v !== undefined && String(v).trim() !== '')
-                    .slice(0, 3)
-                    .map(v => String(v).substring(0, 20) + (String(v).length > 20 ? '...' : ''))
-                    .join(', ');
-                
-                const detectedType = columnTypes[col];
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${col}</strong></td>
-                        <td style="font-size: 12px; color: #666; font-family: monospace;">${sampleValues || '(empty)'}</td>
-                        <td>
-                            <span class="column-type-badge ${detectedType === 'numeric' ? 'badge-numeric' : 'badge-categorical'}">
-                                ${detectedType}
-                            </span>
-                        </td>
-                        <td>
-                            <select class="form-control" style="padding: 6px 10px; font-size: 13px;" onchange="updateColumnType('${col}', this.value)">
-                                <option value="numeric" ${detectedType === 'numeric' ? 'selected' : ''}>Numeric</option>
-                                <option value="categorical" ${detectedType === 'categorical' ? 'selected' : ''}>Categorical</option>
-                            </select>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function updateColumnType(col, type) {
-            columnTypes[col] = type;
         }
 
         function runDiagnostics() {
-            document.getElementById('configSection').classList.add('hidden');
+            document.getElementById('uploadSection').classList.add('hidden');
             document.getElementById('processingSection').classList.remove('hidden');
-            
-            diagnosticResults = {
-                numeric: {},
-                categorical: {},
-                issues: []
-            };
-            
-            let processedCount = 0;
-            const totalColumns = availableColumns.length;
-            
-            // Process each column
+
+            results = { numeric: {}, categorical: {}, issues: [], mixedColumns: {} };
+            corrections = { replacements: {}, deletions: {} };
+
             setTimeout(() => {
-                availableColumns.forEach((col, index) => {
-                    document.getElementById('processingStatus').textContent = `Processing column ${index + 1} of ${totalColumns}: ${col}`;
+                columns.forEach((col, i) => {
+                    document.getElementById('processingStatus').textContent = `Analyzing ${i + 1}/${columns.length}: ${col}`;
                     
-                    if (columnTypes[col] === 'numeric') {
-                        diagnosticResults.numeric[col] = analyzeNumericColumn(col);
+                    const analysis = analyzeColumnContent(col);
+                    
+                    if (analysis.isNumeric) {
+                        // Pure numeric column
+                        results.numeric[col] = {
+                            validCount: analysis.numCount,
+                            naCount: analysis.naCount
+                        };
+                    } else if (analysis.isMostlyNumeric) {
+                        // Mostly numeric but has some text - offer to clean
+                        results.mixedColumns[col] = {
+                            numCount: analysis.numCount,
+                            naCount: analysis.naCount,
+                            textValues: analysis.textValues,
+                            totalText: analysis.totalText
+                        };
                     } else {
-                        diagnosticResults.categorical[col] = analyzeCategoricalColumn(col);
+                        // Categorical
+                        results.categorical[col] = analyzeCategorical(col);
                     }
                 });
-                
+
                 displayResults();
-            }, 100);
+            }, 50);
         }
 
-        function analyzeNumericColumn(col) {
-            const result = {
-                column: col,
-                totalRows: rawData.length,
-                validNumbers: 0,
-                validNA: 0,
-                invalidValues: [],
-                invalidRows: [],
-                stats: {},
-                issues: []
-            };
+        /**
+         * Analyze column content to determine type and find issues
+         */
+        function analyzeColumnContent(col) {
+            let numCount = 0;
+            let naCount = 0;
+            const textValues = new Map();
             
-            const numericValues = [];
-            
-            rawData.forEach((row, index) => {
+            for (const row of rawData) {
                 const val = row[col];
-                const strVal = String(val === null || val === undefined ? '' : val).trim();
-                const lowerVal = strVal.toLowerCase();
+                const str = String(val ?? '').trim();
+                const lower = str.toLowerCase();
                 
-                if (strVal === '' || validNAValues.includes(lowerVal)) {
-                    result.validNA++;
-                } else if (!isNaN(parseFloat(strVal)) && isFinite(strVal)) {
-                    result.validNumbers++;
-                    numericValues.push(parseFloat(strVal));
+                if (NA_VALUES.includes(lower)) {
+                    naCount++;
+                } else if (!isNaN(parseFloat(str)) && isFinite(str)) {
+                    numCount++;
                 } else {
-                    // INVALID - not a number and not a valid NA
-                    result.invalidValues.push({
-                        value: strVal,
-                        row: index + 2 // +2 for 1-indexing and header row
-                    });
-                    result.invalidRows.push(index + 2);
+                    textValues.set(str, (textValues.get(str) || 0) + 1);
                 }
-            });
-            
-            // Calculate statistics
-            if (numericValues.length > 0) {
-                numericValues.sort((a, b) => a - b);
-                const sum = numericValues.reduce((a, b) => a + b, 0);
-                const mean = sum / numericValues.length;
-                const median = numericValues.length % 2 === 0 
-                    ? (numericValues[numericValues.length/2 - 1] + numericValues[numericValues.length/2]) / 2
-                    : numericValues[Math.floor(numericValues.length/2)];
-                
-                const squaredDiffs = numericValues.map(v => Math.pow(v - mean, 2));
-                const variance = squaredDiffs.reduce((a, b) => a + b, 0) / numericValues.length;
-                const stdDev = Math.sqrt(variance);
-                
-                result.stats = {
-                    count: numericValues.length,
-                    min: Math.min(...numericValues),
-                    max: Math.max(...numericValues),
-                    mean: mean,
-                    median: median,
-                    stdDev: stdDev,
-                    sum: sum
-                };
             }
             
-            // Identify unique invalid values
-            const invalidValueCounts = {};
-            result.invalidValues.forEach(item => {
-                invalidValueCounts[item.value] = (invalidValueCounts[item.value] || 0) + 1;
-            });
-            result.uniqueInvalidValues = Object.entries(invalidValueCounts)
-                .map(([value, count]) => ({ value, count }))
-                .sort((a, b) => b.count - a.count);
+            const totalText = Array.from(textValues.values()).reduce((a, b) => a + b, 0);
             
-            // Generate issues
-            if (result.invalidValues.length > 0) {
-                result.issues.push({
-                    type: 'critical',
-                    message: `${result.invalidValues.length} non-numeric values found`,
-                    details: result.uniqueInvalidValues.slice(0, 10)
-                });
-                
-                // Add to global issues
-                result.uniqueInvalidValues.forEach(item => {
-                    diagnosticResults.issues.push({
-                        column: col,
-                        type: 'Numeric',
-                        issue: 'Non-numeric value',
-                        value: item.value,
-                        count: item.count,
-                        severity: 'Critical'
-                    });
-                });
-            }
-            
-            return result;
-        }
-
-        function analyzeCategoricalColumn(col) {
-            const result = {
-                column: col,
-                totalRows: rawData.length,
-                uniqueValues: 0,
-                valueCounts: {},
-                spellingGroups: [],
-                caseVariations: [],
-                spacingIssues: [],
-                issues: []
+            return {
+                isNumeric: textValues.size === 0,
+                numCount,
+                naCount,
+                textValues,
+                totalText,
+                isMostlyNumeric: numCount > totalText && numCount > 0
             };
-            
-            // Count all values
-            rawData.forEach(row => {
+        }
+
+        /**
+         * NUMERIC: Count valid numbers and NA values
+         */
+        function analyzeNumeric(col) {
+            const result = {
+                validCount: 0,
+                naCount: 0
+            };
+
+            for (const row of rawData) {
                 const val = row[col];
-                const strVal = String(val === null || val === undefined ? '' : val);
-                
-                if (!result.valueCounts[strVal]) {
-                    result.valueCounts[strVal] = 0;
+                const str = String(val ?? '').trim();
+                const lower = str.toLowerCase();
+
+                if (NA_VALUES.includes(lower)) {
+                    result.naCount++;
+                } else {
+                    result.validCount++;
                 }
-                result.valueCounts[strVal]++;
-            });
-            
-            result.uniqueValues = Object.keys(result.valueCounts).length;
-            
-            // Detect case variations (same text, different case)
-            const lowerCaseGroups = {};
-            Object.keys(result.valueCounts).forEach(val => {
-                if (val.trim() === '') return;
-                const lower = val.toLowerCase().trim();
-                if (!lowerCaseGroups[lower]) {
-                    lowerCaseGroups[lower] = [];
-                }
-                lowerCaseGroups[lower].push({
-                    original: val,
-                    count: result.valueCounts[val]
-                });
-            });
-            
-            // Find groups with case variations
-            Object.entries(lowerCaseGroups).forEach(([key, variants]) => {
-                if (variants.length > 1) {
-                    result.caseVariations.push({
-                        normalized: key,
-                        variants: variants.sort((a, b) => b.count - a.count)
-                    });
-                    
-                    // Add to issues
-                    result.issues.push({
-                        type: 'warning',
-                        message: `Case variation detected: "${key}"`,
-                        details: variants
-                    });
-                    
-                    diagnosticResults.issues.push({
-                        column: col,
-                        type: 'Categorical',
-                        issue: 'Case variation',
-                        value: variants.map(v => `"${v.original}" (${v.count})`).join(' vs '),
-                        count: variants.reduce((sum, v) => sum + v.count, 0),
-                        severity: 'Warning'
-                    });
-                }
-            });
-            
-            // Detect spacing issues (leading/trailing spaces)
-            Object.keys(result.valueCounts).forEach(val => {
-                if (val !== val.trim() && val.trim() !== '') {
-                    result.spacingIssues.push({
-                        value: val,
-                        trimmed: val.trim(),
-                        count: result.valueCounts[val],
-                        hasLeading: val !== val.trimStart(),
-                        hasTrailing: val !== val.trimEnd()
-                    });
-                    
-                    const spacingType = [];
-                    if (val !== val.trimStart()) spacingType.push('leading');
-                    if (val !== val.trimEnd()) spacingType.push('trailing');
-                    
-                    result.issues.push({
-                        type: 'warning',
-                        message: `Spacing issue (${spacingType.join(' & ')} spaces): "${val}"`,
-                        details: [{ value: val, count: result.valueCounts[val] }]
-                    });
-                    
-                    diagnosticResults.issues.push({
-                        column: col,
-                        type: 'Categorical',
-                        issue: `Spacing issue (${spacingType.join(' & ')} spaces)`,
-                        value: `"${val}" → should be "${val.trim()}"`,
-                        count: result.valueCounts[val],
-                        severity: 'Warning'
-                    });
-                }
-            });
-            
-            // Detect potential spelling variations using Levenshtein distance
-            const uniqueValues = Object.keys(result.valueCounts).filter(v => v.trim() !== '');
-            const spellingGroups = findSpellingVariations(uniqueValues, result.valueCounts);
-            result.spellingGroups = spellingGroups;
-            
-            spellingGroups.forEach(group => {
-                if (group.variants.length > 1) {
-                    result.issues.push({
-                        type: 'info',
-                        message: `Potential spelling variation detected`,
-                        details: group.variants
-                    });
-                    
-                    diagnosticResults.issues.push({
-                        column: col,
-                        type: 'Categorical',
-                        issue: 'Potential spelling variation',
-                        value: group.variants.map(v => `"${v.value}" (${v.count})`).join(' vs '),
-                        count: group.variants.reduce((sum, v) => sum + v.count, 0),
-                        severity: 'Info'
-                    });
-                }
-            });
-            
-            // Sort value counts
-            result.sortedValues = Object.entries(result.valueCounts)
-                .map(([value, count]) => ({ value, count }))
-                .sort((a, b) => b.count - a.count);
-            
+            }
+
             return result;
         }
 
-        function levenshteinDistance(str1, str2) {
-            const m = str1.length;
-            const n = str2.length;
-            const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
-            
-            for (let i = 0; i <= m; i++) dp[i][0] = i;
-            for (let j = 0; j <= n; j++) dp[0][j] = j;
-            
-            for (let i = 1; i <= m; i++) {
-                for (let j = 1; j <= n; j++) {
-                    if (str1[i-1] === str2[j-1]) {
-                        dp[i][j] = dp[i-1][j-1];
-                    } else {
-                        dp[i][j] = 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+        /**
+         * CATEGORICAL: Get unique values and flag case variations
+         */
+        function analyzeCategorical(col) {
+            const result = {
+                valueCounts: new Map(),    // exact value -> count
+                caseGroups: new Map()      // lowercase -> Map(original -> count)
+            };
+
+            for (const row of rawData) {
+                const val = String(row[col] ?? '');
+                const lower = val.toLowerCase().trim();
+
+                // Count exact values
+                result.valueCounts.set(val, (result.valueCounts.get(val) || 0) + 1);
+
+                // Group by lowercase for case variation detection
+                if (val.trim() !== '') {
+                    if (!result.caseGroups.has(lower)) {
+                        result.caseGroups.set(lower, new Map());
                     }
+                    const group = result.caseGroups.get(lower);
+                    group.set(val, (group.get(val) || 0) + 1);
                 }
             }
-            
-            return dp[m][n];
-        }
 
-        function findSpellingVariations(values, counts) {
-            const groups = [];
-            const processed = new Set();
-            
-            // Only check values that are similar length and have distance 1-2
-            values.forEach(val1 => {
-                if (processed.has(val1)) return;
-                if (val1.length < 3) return; // Skip very short values
-                
-                const group = {
-                    variants: [{ value: val1, count: counts[val1] }]
-                };
-                
-                values.forEach(val2 => {
-                    if (val1 === val2 || processed.has(val2)) return;
-                    if (Math.abs(val1.length - val2.length) > 2) return; // Length too different
+            // Find case variations (same lowercase, different original)
+            result.caseVariations = [];
+            result.caseGroups.forEach((variants, lower) => {
+                if (variants.size > 1) {
+                    const variantList = Array.from(variants.entries())
+                        .map(([val, count]) => ({ value: val, count }))
+                        .sort((a, b) => b.count - a.count);
                     
-                    // Case-insensitive comparison first
-                    if (val1.toLowerCase() === val2.toLowerCase()) return; // Already caught by case variation
-                    
-                    const distance = levenshteinDistance(val1.toLowerCase(), val2.toLowerCase());
-                    const maxLen = Math.max(val1.length, val2.length);
-                    
-                    // Consider similar if distance is 1-2 and less than 30% of length
-                    if (distance > 0 && distance <= 2 && (distance / maxLen) < 0.3) {
-                        group.variants.push({ value: val2, count: counts[val2] });
-                        processed.add(val2);
-                    }
-                });
-                
-                if (group.variants.length > 1) {
-                    groups.push(group);
-                    group.variants.forEach(v => processed.add(v.value));
+                    result.caseVariations.push({ normalized: lower, variants: variantList });
+
+                    // Add to issues
+                    results.issues.push({
+                        column: col,
+                        issue: 'Case variation',
+                        values: variantList.map(v => `"${v.value}" (${v.count})`).join(' vs '),
+                        count: variantList.reduce((sum, v) => sum + v.count, 0)
+                    });
                 }
             });
-            
-            return groups;
+
+            // Sort values by count
+            result.sortedValues = Array.from(result.valueCounts.entries())
+                .map(([value, count]) => ({ value, count }))
+                .sort((a, b) => b.count - a.count);
+
+            return result;
         }
 
         function displayResults() {
             document.getElementById('processingSection').classList.add('hidden');
             document.getElementById('resultsSection').classList.remove('hidden');
-            
-            // Calculate overall statistics
-            const numericCols = Object.keys(diagnosticResults.numeric).length;
-            const categoricalCols = Object.keys(diagnosticResults.categorical).length;
-            const totalIssues = diagnosticResults.issues.length;
-            const criticalIssues = diagnosticResults.issues.filter(i => i.severity === 'Critical').length;
-            const warningIssues = diagnosticResults.issues.filter(i => i.severity === 'Warning').length;
-            
-            // Columns with issues
-            const colsWithIssues = new Set(diagnosticResults.issues.map(i => i.column)).size;
-            
-            // Display overall stats
+
+            const numCols = Object.keys(results.numeric).length;
+            const mixedCols = Object.keys(results.mixedColumns).length;
+            const catCols = Object.keys(results.categorical).length;
+            const totalIssues = results.issues.length;
+            const colsWithIssues = new Set(results.issues.map(i => i.column)).size;
+
+            // Overall stats
             document.getElementById('overallStats').innerHTML = `
-                <div class="stats-card">
-                    <h4>Total Columns</h4>
-                    <div class="metric-value">${availableColumns.length}</div>
-                    <p>Analyzed</p>
-                </div>
-                <div class="stats-card info">
-                    <h4>Numeric</h4>
-                    <div class="metric-value">${numericCols}</div>
-                    <p>Columns</p>
-                </div>
-                <div class="stats-card info">
-                    <h4>Categorical</h4>
-                    <div class="metric-value">${categoricalCols}</div>
-                    <p>Columns</p>
-                </div>
-                <div class="stats-card ${totalIssues > 0 ? 'warning' : 'success'}">
-                    <h4>Total Issues</h4>
-                    <div class="metric-value">${totalIssues}</div>
-                    <p>Found</p>
-                </div>
-                <div class="stats-card ${criticalIssues > 0 ? 'warning' : 'success'}">
-                    <h4>Critical</h4>
-                    <div class="metric-value">${criticalIssues}</div>
-                    <p>Issues</p>
-                </div>
-                <div class="stats-card ${colsWithIssues > 0 ? 'warning' : 'success'}">
-                    <h4>Columns w/ Issues</h4>
-                    <div class="metric-value">${colsWithIssues}</div>
-                    <p>of ${availableColumns.length}</p>
-                </div>
+                <div class="stats-card"><h4>Total Columns</h4><div class="metric-value">${columns.length}</div></div>
+                <div class="stats-card"><h4>Numeric</h4><div class="metric-value">${numCols}</div><p>Numbers + NA only</p></div>
+                <div class="stats-card ${mixedCols > 0 ? 'warning' : ''}"><h4>Mixed (Fixable)</h4><div class="metric-value">${mixedCols}</div><p>Mostly numbers</p></div>
+                <div class="stats-card"><h4>Categorical</h4><div class="metric-value">${catCols}</div><p>Text values</p></div>
+                <div class="stats-card ${totalIssues > 0 ? 'warning' : 'success'}"><h4>Case Issues</h4><div class="metric-value">${totalIssues}</div></div>
             `;
-            
-            // Issue summary box
-            const issueSummaryHtml = totalIssues === 0 
-                ? `<div class="issue-summary-box clean">
-                        <h4 style="color: #155724;">✓ No Issues Found!</h4>
-                        <p>All columns passed diagnostics. Your data looks clean!</p>
-                   </div>`
-                : `<div class="issue-summary-box">
-                        <h4 style="color: #721c24;">⚠️ ${totalIssues} Issues Found in ${colsWithIssues} Columns</h4>
-                        <p>${criticalIssues} critical (non-numeric values), ${warningIssues} warnings (spelling/case/spacing)</p>
-                   </div>`;
-            
-            document.getElementById('issueSummaryContainer').innerHTML = issueSummaryHtml;
-            
-            // Display numeric results
-            displayNumericResults();
-            
-            // Display categorical results
-            displayCategoricalResults();
-            
-            // Display all issues
-            displayAllIssues();
-            
-            showAlert('Diagnostics complete!', totalIssues > 0 ? 'warning' : 'success');
+
+            // Summary box
+            let summaryHtml = '';
+            if (mixedCols > 0 || totalIssues > 0) {
+                summaryHtml = '<div class="alert alert-error">';
+                if (mixedCols > 0) {
+                    summaryHtml += `<strong>🔧 ${mixedCols} columns have text in numeric data</strong> - Go to "Fix Mixed" tab to remove invalid values.<br>`;
+                }
+                if (totalIssues > 0) {
+                    summaryHtml += `<strong>⚠️ ${totalIssues} case variations found</strong> - Go to "Categorical" tab to standardize spelling.`;
+                }
+                summaryHtml += '</div>';
+            } else {
+                summaryHtml = '<div class="alert alert-success"><strong>✓ No Issues Found!</strong> Your data looks clean.</div>';
+            }
+            document.getElementById('summaryBox').innerHTML = summaryHtml;
+
+            displayNumericTab();
+            displayMixedTab();
+            displayCategoricalTab();
+            displayIssuesTab();
+
+            showAlert('Diagnostics complete!', (mixedCols > 0 || totalIssues > 0) ? 'error' : 'success');
         }
 
-        function displayNumericResults() {
-            const container = document.getElementById('numericResults');
-            
-            if (Object.keys(diagnosticResults.numeric).length === 0) {
-                container.innerHTML = '<div class="alert alert-info">No numeric columns to display.</div>';
+        function displayNumericTab() {
+            const container = document.getElementById('numericTab');
+            const entries = Object.entries(results.numeric);
+
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No pure numeric columns detected. A column is numeric only if ALL values are numbers or NA.</div>';
                 return;
             }
-            
+
             let html = '';
-            
-            Object.entries(diagnosticResults.numeric).forEach(([col, result]) => {
-                const hasIssues = result.invalidValues.length > 0;
-                
+            entries.forEach(([col, data]) => {
                 html += `
-                    <div class="column-card ${hasIssues ? 'has-issues' : 'no-issues'}">
+                    <div class="column-card no-issues">
                         <div class="column-header numeric" onclick="toggleColumn(this)">
                             <div>
                                 <span class="column-name">${col}</span>
-                                <span class="column-type-badge badge-numeric">NUMERIC</span>
-                                ${hasIssues ? `<span class="issue-tag issue-critical">${result.invalidValues.length} ISSUES</span>` : '<span class="issue-tag issue-success">✓ CLEAN</span>'}
+                                <span class="badge badge-numeric">NUMERIC</span>
+                                <span class="badge badge-clean">✓ CLEAN</span>
                             </div>
                             <span class="expand-icon">▼</span>
                         </div>
                         <div class="column-body">
-                            <div class="stats-mini-grid">
-                                <div class="stats-mini">
-                                    <div class="label">Valid Numbers</div>
-                                    <div class="value">${result.validNumbers.toLocaleString()}</div>
-                                </div>
-                                <div class="stats-mini">
-                                    <div class="label">NA/Missing</div>
-                                    <div class="value">${result.validNA.toLocaleString()}</div>
-                                </div>
-                                <div class="stats-mini">
-                                    <div class="label">Invalid</div>
-                                    <div class="value" style="color: ${result.invalidValues.length > 0 ? '#dc3545' : '#28a745'};">${result.invalidValues.length.toLocaleString()}</div>
-                                </div>
-                                ${result.stats.count ? `
-                                    <div class="stats-mini">
-                                        <div class="label">Min</div>
-                                        <div class="value">${formatNumber(result.stats.min)}</div>
-                                    </div>
-                                    <div class="stats-mini">
-                                        <div class="label">Max</div>
-                                        <div class="value">${formatNumber(result.stats.max)}</div>
-                                    </div>
-                                    <div class="stats-mini">
-                                        <div class="label">Mean</div>
-                                        <div class="value">${formatNumber(result.stats.mean)}</div>
-                                    </div>
-                                    <div class="stats-mini">
-                                        <div class="label">Median</div>
-                                        <div class="value">${formatNumber(result.stats.median)}</div>
-                                    </div>
-                                    <div class="stats-mini">
-                                        <div class="label">Std Dev</div>
-                                        <div class="value">${formatNumber(result.stats.stdDev)}</div>
-                                    </div>
-                                ` : ''}
+                            <div class="stats-row">
+                                <div class="stat-item"><div class="label">Valid Numbers</div><div class="value">${data.validCount.toLocaleString()}</div></div>
+                                <div class="stat-item"><div class="label">NA/Missing</div><div class="value">${data.naCount.toLocaleString()}</div></div>
+                                <div class="stat-item"><div class="label">Total</div><div class="value">${(data.validCount + data.naCount).toLocaleString()}</div></div>
                             </div>
-                            
-                            ${result.uniqueInvalidValues.length > 0 ? `
-                                <div style="margin-top: 1rem;">
-                                    <h5 style="color: #dc3545; margin-bottom: 0.5rem;">❌ Invalid Values Found:</h5>
-                                    <div class="value-list">
-                                        ${result.uniqueInvalidValues.slice(0, 20).map(item => `
-                                            <span class="value-chip problematic">
-                                                "${item.value}"
-                                                <span class="count">${item.count}</span>
-                                            </span>
-                                        `).join('')}
-                                        ${result.uniqueInvalidValues.length > 20 ? `<span class="value-chip">... and ${result.uniqueInvalidValues.length - 20} more</span>` : ''}
-                                    </div>
-                                </div>
-                            ` : ''}
+                            <p style="color:#28a745; margin-top:1rem;">✓ All values are valid numbers or NA</p>
                         </div>
                     </div>
                 `;
             });
-            
+
             container.innerHTML = html;
         }
 
-        function displayCategoricalResults() {
-            const container = document.getElementById('categoricalResults');
-            
-            if (Object.keys(diagnosticResults.categorical).length === 0) {
-                container.innerHTML = '<div class="alert alert-info">No categorical columns to display.</div>';
+        function displayMixedTab() {
+            const container = document.getElementById('mixedTab');
+            const entries = Object.entries(results.mixedColumns);
+
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="alert alert-success"><strong>✓ No mixed columns!</strong> All numeric columns are clean.</div>';
                 return;
             }
-            
-            let html = '';
-            
-            Object.entries(diagnosticResults.categorical).forEach(([col, result]) => {
-                const hasIssues = result.issues.length > 0;
+
+            let html = `
+                <div class="alert alert-info" style="margin-bottom:1rem;">
+                    <strong>🔧 These columns are mostly numeric but contain some text values.</strong><br>
+                    Check the text values you want to <strong>DELETE</strong> (convert to empty/NA), then click "Apply Fixes & Download".
+                </div>
+            `;
+
+            entries.forEach(([col, data]) => {
+                const textArray = Array.from(data.textValues.entries()).sort((a, b) => b[1] - a[1]);
+                const colId = col.replace(/[^a-zA-Z0-9]/g, '_');
                 
+                html += `
+                    <div class="column-card has-issues">
+                        <div class="column-header" style="background:#ffe6e6; border-bottom:2px solid #dc3545;" onclick="toggleColumn(this)">
+                            <div>
+                                <span class="column-name">${col}</span>
+                                <span class="badge" style="background:#dc3545; color:#fff;">MIXED</span>
+                                <span class="badge badge-issues">${data.totalText} TEXT VALUES</span>
+                            </div>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="column-body expanded">
+                            <div class="stats-row">
+                                <div class="stat-item"><div class="label">Valid Numbers</div><div class="value">${data.numCount.toLocaleString()}</div></div>
+                                <div class="stat-item"><div class="label">NA/Missing</div><div class="value">${data.naCount.toLocaleString()}</div></div>
+                                <div class="stat-item"><div class="label">Text (Invalid)</div><div class="value" style="color:#dc3545">${data.totalText.toLocaleString()}</div></div>
+                            </div>
+                            
+                            <div style="margin-top:1rem; padding:1rem; background:#f8f9fa; border-radius:6px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                                    <h5 style="color:#dc3545;">❌ Select Text Values to DELETE:</h5>
+                                    <label style="font-size:12px; cursor:pointer;">
+                                        <input type="checkbox" onchange="toggleAllDeletions('${colId}', '${col}', this.checked)"> Select All
+                                    </label>
+                                </div>
+                                <div class="value-list">
+                                    ${textArray.map(([val, cnt]) => `
+                                        <label class="value-chip bad" style="cursor:pointer;">
+                                            <input type="checkbox" class="deletion-${colId}" data-col="${col}" data-val="${val.replace(/"/g, '&quot;')}" onchange="updateDeletion('${col}', '${val.replace(/'/g, "\\'")}', this.checked)">
+                                            "${val}" <span class="count">${cnt}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                                <p style="font-size:11px; color:#666; margin-top:0.5rem;">⚠️ Checked values will be replaced with empty (NA) when you apply fixes</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Initialize empty deletions set for this column (user must select)
+                corrections.deletions[col] = new Set();
+            });
+
+            container.innerHTML = html;
+        }
+
+        function toggleAllDeletions(colId, col, checked) {
+            document.querySelectorAll(`.deletion-${colId}`).forEach(cb => {
+                cb.checked = checked;
+                const val = cb.dataset.val;
+                if (checked) {
+                    if (!corrections.deletions[col]) corrections.deletions[col] = new Set();
+                    corrections.deletions[col].add(val);
+                } else {
+                    if (corrections.deletions[col]) corrections.deletions[col].delete(val);
+                }
+            });
+        }
+
+        function updateDeletion(col, val, checked) {
+            if (!corrections.deletions[col]) corrections.deletions[col] = new Set();
+            if (checked) {
+                corrections.deletions[col].add(val);
+            } else {
+                corrections.deletions[col].delete(val);
+            }
+        }
+
+        function displayCategoricalTab() {
+            const container = document.getElementById('categoricalTab');
+            const entries = Object.entries(results.categorical);
+
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No categorical columns detected.</div>';
+                return;
+            }
+
+            let html = `
+                <div class="alert alert-info" style="margin-bottom:1rem;">
+                    <strong>🏷️ For columns with case variations:</strong> Select the STANDARD spelling you want to keep. All other variations will be replaced with your chosen standard when you apply fixes.
+                </div>
+            `;
+            
+            entries.forEach(([col, data]) => {
+                const hasIssues = data.caseVariations.length > 0;
+                const colId = col.replace(/[^a-zA-Z0-9]/g, '_');
+
                 html += `
                     <div class="column-card ${hasIssues ? 'has-issues' : 'no-issues'}">
                         <div class="column-header categorical" onclick="toggleColumn(this)">
                             <div>
                                 <span class="column-name">${col}</span>
-                                <span class="column-type-badge badge-categorical">CATEGORICAL</span>
-                                ${result.caseVariations.length > 0 ? `<span class="issue-tag issue-warning">${result.caseVariations.length} CASE ISSUES</span>` : ''}
-                                ${result.spacingIssues.length > 0 ? `<span class="issue-tag issue-warning">${result.spacingIssues.length} SPACING</span>` : ''}
-                                ${result.spellingGroups.length > 0 ? `<span class="issue-tag issue-info">${result.spellingGroups.length} SPELLING?</span>` : ''}
-                                ${!hasIssues ? '<span class="issue-tag issue-success">✓ CLEAN</span>' : ''}
+                                <span class="badge badge-categorical">CATEGORICAL</span>
+                                <span class="badge ${hasIssues ? 'badge-issues' : 'badge-clean'}">${hasIssues ? data.caseVariations.length + ' CASE ISSUES' : '✓ CLEAN'}</span>
                             </div>
                             <span class="expand-icon">▼</span>
                         </div>
-                        <div class="column-body">
-                            <div class="stats-mini-grid">
-                                <div class="stats-mini">
-                                    <div class="label">Total Rows</div>
-                                    <div class="value">${result.totalRows.toLocaleString()}</div>
-                                </div>
-                                <div class="stats-mini">
-                                    <div class="label">Unique Values</div>
-                                    <div class="value">${result.uniqueValues.toLocaleString()}</div>
-                                </div>
-                                <div class="stats-mini">
-                                    <div class="label">Case Variations</div>
-                                    <div class="value" style="color: ${result.caseVariations.length > 0 ? '#ffc107' : '#28a745'};">${result.caseVariations.length}</div>
-                                </div>
-                                <div class="stats-mini">
-                                    <div class="label">Spacing Issues</div>
-                                    <div class="value" style="color: ${result.spacingIssues.length > 0 ? '#ffc107' : '#28a745'};">${result.spacingIssues.length}</div>
-                                </div>
+                        <div class="column-body ${hasIssues ? 'expanded' : ''}">
+                            <div class="stats-row">
+                                <div class="stat-item"><div class="label">Total Rows</div><div class="value">${rawData.length.toLocaleString()}</div></div>
+                                <div class="stat-item"><div class="label">Unique Values</div><div class="value">${data.valueCounts.size.toLocaleString()}</div></div>
+                                <div class="stat-item"><div class="label">Case Variations</div><div class="value" style="color:${hasIssues ? '#dc3545' : '#28a745'}">${data.caseVariations.length}</div></div>
                             </div>
                             
-                            ${result.caseVariations.length > 0 ? `
-                                <div style="margin-top: 1rem;">
-                                    <h5 style="color: #856404; margin-bottom: 0.5rem;">⚠️ Case Variations (these are treated as DIFFERENT values):</h5>
-                                    ${result.caseVariations.slice(0, 10).map(group => `
-                                        <div class="spelling-group">
+                            ${hasIssues ? `
+                                <div style="margin-top:1rem; padding:1rem; background:#fff3cd; border-radius:6px; border:2px solid #ffc107;">
+                                    <h5 style="color:#856404; margin-bottom:0.75rem;">⚠️ Select the STANDARD Spelling (others will be replaced):</h5>
+                                    ${data.caseVariations.map((group, groupIdx) => `
+                                        <div style="background:#fff; padding:0.75rem; border-radius:6px; margin-bottom:0.5rem; border:1px solid #ddd;">
+                                            <div style="font-size:11px; color:#666; margin-bottom:0.5rem;">Variation ${groupIdx + 1}: Select which spelling to KEEP as standard</div>
                                             <div class="value-list">
-                                                ${group.variants.map(v => `
-                                                    <span class="value-chip problematic">
-                                                        "${v.original}"
-                                                        <span class="count">${v.count}</span>
-                                                    </span>
-                                                `).join('<span style="color: #dc3545; font-weight: bold;"> ≠ </span>')}
+                                                ${group.variants.map((v, vIdx) => `
+                                                    <label class="value-chip ${vIdx === 0 ? '' : 'bad'}" style="cursor:pointer;">
+                                                        <input type="radio" name="std_${colId}_${groupIdx}" value="${v.value.replace(/"/g, '&quot;')}" 
+                                                            ${vIdx === 0 ? 'checked' : ''} 
+                                                            onchange="updateStandardForm('${col}', ${groupIdx}, '${v.value.replace(/'/g, "\\'")}')">
+                                                        "${v.value}" <span class="count">${v.count}</span>
+                                                    </label>
+                                                `).join('')}
                                             </div>
+                                            <p style="font-size:10px; color:#856404; margin-top:0.5rem;">→ Non-selected values will be replaced with the selected standard</p>
                                         </div>
                                     `).join('')}
                                 </div>
                             ` : ''}
                             
-                            ${result.spacingIssues.length > 0 ? `
-                                <div style="margin-top: 1rem;">
-                                    <h5 style="color: #856404; margin-bottom: 0.5rem;">⚠️ Spacing Issues (leading/trailing spaces):</h5>
-                                    <div class="value-list">
-                                        ${result.spacingIssues.slice(0, 10).map(item => `
-                                            <span class="value-chip problematic">
-                                                "${item.value}" → "${item.trimmed}"
-                                                <span class="count">${item.count}</span>
-                                            </span>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
-                            
-                            ${result.spellingGroups.length > 0 ? `
-                                <div style="margin-top: 1rem;">
-                                    <h5 style="color: #17a2b8; margin-bottom: 0.5rem;">🔍 Potential Spelling Variations (review these):</h5>
-                                    ${result.spellingGroups.slice(0, 10).map(group => `
-                                        <div class="spelling-group" style="background: #d1ecf1; border-color: #17a2b8;">
-                                            <div class="value-list">
-                                                ${group.variants.map(v => `
-                                                    <span class="value-chip" style="background: #d1ecf1; border-color: #17a2b8;">
-                                                        "${v.value}"
-                                                        <span class="count" style="background: #17a2b8;">${v.count}</span>
-                                                    </span>
-                                                `).join('<span style="color: #17a2b8;"> ~ </span>')}
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-                            
-                            <div style="margin-top: 1rem;">
-                                <h5 style="color: #004080; margin-bottom: 0.5rem;">📊 Value Distribution (Top 20):</h5>
+                            <div style="margin-top:1rem;">
+                                <h5 style="color:#004080; margin-bottom:0.5rem;">📊 Unique Values (Top 30):</h5>
                                 <div class="value-list">
-                                    ${result.sortedValues.slice(0, 20).map(item => `
-                                        <span class="value-chip">
-                                            ${item.value === '' ? '(empty)' : `"${item.value}"`}
-                                            <span class="count">${item.count}</span>
-                                        </span>
+                                    ${data.sortedValues.slice(0, 30).map(v => `
+                                        <span class="value-chip">${v.value === '' ? '(empty)' : `"${v.value}"`} <span class="count">${v.count}</span></span>
                                     `).join('')}
-                                    ${result.sortedValues.length > 20 ? `<span class="value-chip">... and ${result.sortedValues.length - 20} more</span>` : ''}
+                                    ${data.sortedValues.length > 30 ? `<span class="value-chip">...and ${data.sortedValues.length - 30} more</span>` : ''}
                                 </div>
                             </div>
                         </div>
                     </div>
                 `;
+                
+                // Initialize replacements for this column (default to first variant - most common)
+                if (hasIssues) {
+                    if (!corrections.replacements[col]) corrections.replacements[col] = {};
+                    data.caseVariations.forEach((group, groupIdx) => {
+                        const standardForm = group.variants[0].value;
+                        group.variants.forEach(v => {
+                            if (v.value !== standardForm) {
+                                corrections.replacements[col][v.value] = standardForm;
+                            }
+                        });
+                    });
+                }
             });
-            
+
             container.innerHTML = html;
         }
 
-        function displayAllIssues() {
-            const container = document.getElementById('allIssuesResults');
+        function updateStandardForm(col, groupIdx, standardValue) {
+            const data = results.categorical[col];
+            const group = data.caseVariations[groupIdx];
             
-            if (diagnosticResults.issues.length === 0) {
-                container.innerHTML = '<div class="alert alert-success"><strong>✓ No issues found!</strong> All columns passed diagnostics.</div>';
+            if (!corrections.replacements[col]) corrections.replacements[col] = {};
+            
+            // Update replacements: all variants in this group become the standard value
+            group.variants.forEach(v => {
+                if (v.value !== standardValue) {
+                    corrections.replacements[col][v.value] = standardValue;
+                } else {
+                    // Remove if it was previously set as a replacement
+                    delete corrections.replacements[col][v.value];
+                }
+            });
+        }
+
+        function displayIssuesTab() {
+            const container = document.getElementById('issuesTab');
+
+            if (results.issues.length === 0) {
+                container.innerHTML = '<div class="alert alert-success"><strong>✓ No case variations found!</strong> All categorical values are consistent.</div>';
                 return;
             }
-            
-            // Group issues by column
-            const issuesByColumn = {};
-            diagnosticResults.issues.forEach(issue => {
-                if (!issuesByColumn[issue.column]) {
-                    issuesByColumn[issue.column] = [];
-                }
-                issuesByColumn[issue.column].push(issue);
-            });
-            
+
             let html = `
-                <div class="table-container" style="max-height: 600px;">
+                <div class="table-container">
                     <table class="results-table">
                         <thead>
-                            <tr>
-                                <th>Column</th>
-                                <th>Type</th>
-                                <th>Issue</th>
-                                <th>Value(s)</th>
-                                <th>Count</th>
-                                <th>Severity</th>
-                            </tr>
+                            <tr><th>Column</th><th>Issue</th><th>Values</th><th>Total Count</th></tr>
                         </thead>
                         <tbody>
             `;
-            
-            diagnosticResults.issues.forEach(issue => {
-                const severityClass = issue.severity === 'Critical' ? 'issue-critical' : 
-                                      issue.severity === 'Warning' ? 'issue-warning' : 'issue-info';
+
+            results.issues.forEach(issue => {
                 html += `
                     <tr>
                         <td><strong>${issue.column}</strong></td>
-                        <td><span class="column-type-badge ${issue.type === 'Numeric' ? 'badge-numeric' : 'badge-categorical'}">${issue.type}</span></td>
-                        <td>${issue.issue}</td>
-                        <td style="font-family: monospace; font-size: 12px; max-width: 300px; word-wrap: break-word;">${issue.value}</td>
+                        <td>Case variation</td>
+                        <td style="font-family:monospace; font-size:12px; max-width:400px; word-wrap:break-word;">${issue.values}</td>
                         <td>${issue.count}</td>
-                        <td><span class="issue-tag ${severityClass}">${issue.severity}</span></td>
                     </tr>
                 `;
             });
-            
+
             html += '</tbody></table></div>';
             container.innerHTML = html;
         }
 
         function toggleColumn(header) {
-            const body = header.nextElementSibling;
-            const icon = header.querySelector('.expand-icon');
-            
-            body.classList.toggle('expanded');
-            icon.classList.toggle('rotated');
+            header.nextElementSibling.classList.toggle('expanded');
+            header.querySelector('.expand-icon').classList.toggle('rotated');
         }
 
-        function switchTab(tabName) {
-            // Update tab buttons
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelector(`.tab:nth-child(${tabName === 'numeric' ? 1 : tabName === 'categorical' ? 2 : 3})`).classList.add('active');
-            
-            // Update tab content
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(`${tabName}Tab`).classList.add('active');
+        function switchTab(name) {
+            document.querySelectorAll('.tab').forEach((t, i) => {
+                const tabNames = ['numeric', 'mixed', 'categorical', 'issues'];
+                t.classList.toggle('active', tabNames[i] === name);
+            });
+            ['numeric', 'mixed', 'categorical', 'issues'].forEach(tab => {
+                document.getElementById(`${tab}Tab`).classList.toggle('active', tab === name);
+            });
         }
 
-        function formatNumber(num) {
-            if (num === undefined || num === null) return 'N/A';
-            if (Math.abs(num) >= 1000000) {
-                return (num / 1000000).toFixed(2) + 'M';
-            } else if (Math.abs(num) >= 1000) {
-                return (num / 1000).toFixed(2) + 'K';
-            } else if (Number.isInteger(num)) {
-                return num.toString();
-            } else {
-                return num.toFixed(2);
+        /**
+         * Apply all corrections and download cleaned data
+         */
+        function applyFixesAndDownload() {
+            // Count fixes to apply
+            let deletionCount = 0;
+            let replacementCount = 0;
+            
+            Object.values(corrections.deletions).forEach(set => {
+                deletionCount += set.size;
+            });
+            Object.values(corrections.replacements).forEach(obj => {
+                replacementCount += Object.keys(obj).length;
+            });
+            
+            if (deletionCount === 0 && replacementCount === 0) {
+                showAlert('No fixes selected! Check the values you want to delete or the spellings you want to standardize.', 'info');
+                return;
             }
+            
+            // Create a copy of the data and apply fixes
+            const cleanedData = rawData.map(row => {
+                const newRow = { ...row };
+                
+                // Apply deletions (text in numeric columns -> empty)
+                Object.entries(corrections.deletions).forEach(([col, valuesToDelete]) => {
+                    const val = String(newRow[col] ?? '').trim();
+                    if (valuesToDelete.has(val)) {
+                        newRow[col] = ''; // Set to empty/NA
+                    }
+                });
+                
+                // Apply replacements (case standardization)
+                Object.entries(corrections.replacements).forEach(([col, replacements]) => {
+                    const val = String(newRow[col] ?? '');
+                    if (replacements[val]) {
+                        newRow[col] = replacements[val];
+                    }
+                });
+                
+                return newRow;
+            });
+            
+            // Count actual changes made
+            let deletedCells = 0;
+            let replacedCells = 0;
+            rawData.forEach((row, i) => {
+                columns.forEach(col => {
+                    const oldVal = String(row[col] ?? '');
+                    const newVal = String(cleanedData[i][col] ?? '');
+                    if (oldVal !== newVal) {
+                        if (newVal === '') {
+                            deletedCells++;
+                        } else {
+                            replacedCells++;
+                        }
+                    }
+                });
+            });
+            
+            // Create workbook and download
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(cleanedData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Cleaned Data');
+            
+            // Add a summary sheet
+            const summaryData = [
+                ['DATA CLEANING SUMMARY'],
+                ['Original File:', fileName],
+                ['Date:', new Date().toLocaleString()],
+                [''],
+                ['CHANGES APPLIED'],
+                ['Cells Deleted (→ empty):', deletedCells],
+                ['Cells Replaced (spelling):', replacedCells],
+                ['Total Changes:', deletedCells + replacedCells],
+                [''],
+                ['DELETIONS (Text → Empty):'],
+            ];
+            
+            Object.entries(corrections.deletions).forEach(([col, values]) => {
+                if (values.size > 0) {
+                    summaryData.push([`  ${col}:`, Array.from(values).join(', ')]);
+                }
+            });
+            
+            summaryData.push(['']);
+            summaryData.push(['REPLACEMENTS (Spelling Standardization):']);
+            
+            Object.entries(corrections.replacements).forEach(([col, replacements]) => {
+                Object.entries(replacements).forEach(([from, to]) => {
+                    summaryData.push([`  ${col}:`, `"${from}" → "${to}"`]);
+                });
+            });
+            
+            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+            
+            const outputName = fileName.replace(/\.[^.]+$/, '_CLEANED.xlsx');
+            XLSX.writeFile(wb, outputName);
+            
+            showAlert(`✓ Done! Deleted ${deletedCells} cells, replaced ${replacedCells} spellings. Cleaned file downloaded!`, 'success');
         }
 
         function downloadReport() {
             const wb = XLSX.utils.book_new();
-            
-            // Summary sheet
-            const summaryData = [
+
+            // Summary
+            const summary = [
                 ['DATA DIAGNOSTICS REPORT'],
                 ['File:', fileName],
                 ['Date:', new Date().toLocaleString()],
                 [''],
-                ['SUMMARY'],
-                ['Total Columns', availableColumns.length],
-                ['Numeric Columns', Object.keys(diagnosticResults.numeric).length],
-                ['Categorical Columns', Object.keys(diagnosticResults.categorical).length],
-                ['Total Issues', diagnosticResults.issues.length],
-                ['Critical Issues', diagnosticResults.issues.filter(i => i.severity === 'Critical').length],
-                ['Warning Issues', diagnosticResults.issues.filter(i => i.severity === 'Warning').length],
+                ['COLUMN CLASSIFICATION'],
+                ['Total Columns', columns.length],
+                ['Numeric Columns (numbers + NA only)', Object.keys(results.numeric).length],
+                ['Mixed Columns (mostly numeric, some text)', Object.keys(results.mixedColumns).length],
+                ['Categorical Columns (contains text)', Object.keys(results.categorical).length],
+                [''],
+                ['ISSUES'],
+                ['Columns with text in numeric data', Object.keys(results.mixedColumns).length],
+                ['Case Variations Found', results.issues.length],
             ];
-            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-            XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
-            
-            // Issues sheet
-            if (diagnosticResults.issues.length > 0) {
-                const issuesData = [
-                    ['Column', 'Type', 'Issue', 'Value(s)', 'Count', 'Severity']
-                ];
-                diagnosticResults.issues.forEach(issue => {
-                    issuesData.push([issue.column, issue.type, issue.issue, issue.value, issue.count, issue.severity]);
-                });
-                const issuesWs = XLSX.utils.aoa_to_sheet(issuesData);
-                XLSX.utils.book_append_sheet(wb, issuesWs, 'All Issues');
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Summary');
+
+            // Issues
+            if (results.issues.length > 0) {
+                const issueData = [['Column', 'Issue', 'Values', 'Count']];
+                results.issues.forEach(i => issueData.push([i.column, i.issue, i.values, i.count]));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(issueData), 'Case Issues');
             }
-            
-            // Numeric stats sheet
-            if (Object.keys(diagnosticResults.numeric).length > 0) {
-                const numericData = [
-                    ['Column', 'Valid Numbers', 'NA/Missing', 'Invalid', 'Min', 'Max', 'Mean', 'Median', 'Std Dev']
-                ];
-                Object.entries(diagnosticResults.numeric).forEach(([col, result]) => {
-                    numericData.push([
-                        col,
-                        result.validNumbers,
-                        result.validNA,
-                        result.invalidValues.length,
-                        result.stats.min,
-                        result.stats.max,
-                        result.stats.mean,
-                        result.stats.median,
-                        result.stats.stdDev
-                    ]);
+
+            // Numeric
+            if (Object.keys(results.numeric).length > 0) {
+                const numData = [['Column', 'Valid Numbers', 'NA/Missing', 'Total']];
+                Object.entries(results.numeric).forEach(([col, d]) => {
+                    numData.push([col, d.validCount, d.naCount, d.validCount + d.naCount]);
                 });
-                const numericWs = XLSX.utils.aoa_to_sheet(numericData);
-                XLSX.utils.book_append_sheet(wb, numericWs, 'Numeric Stats');
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(numData), 'Numeric');
             }
-            
-            // Categorical stats sheet
-            if (Object.keys(diagnosticResults.categorical).length > 0) {
-                const catData = [
-                    ['Column', 'Total Rows', 'Unique Values', 'Case Variations', 'Spacing Issues', 'Spelling Variations']
-                ];
-                Object.entries(diagnosticResults.categorical).forEach(([col, result]) => {
-                    catData.push([
-                        col,
-                        result.totalRows,
-                        result.uniqueValues,
-                        result.caseVariations.length,
-                        result.spacingIssues.length,
-                        result.spellingGroups.length
-                    ]);
+
+            // Mixed columns
+            if (Object.keys(results.mixedColumns).length > 0) {
+                const mixedData = [['Column', 'Valid Numbers', 'NA/Missing', 'Text Values', 'Invalid Text']];
+                Object.entries(results.mixedColumns).forEach(([col, d]) => {
+                    const textList = Array.from(d.textValues.entries()).map(([v, c]) => `${v} (${c})`).join(', ');
+                    mixedData.push([col, d.numCount, d.naCount, d.totalText, textList]);
                 });
-                const catWs = XLSX.utils.aoa_to_sheet(catData);
-                XLSX.utils.book_append_sheet(wb, catWs, 'Categorical Stats');
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(mixedData), 'Mixed (Fixable)');
             }
-            
-            const outputName = fileName.replace(/\.[^/.]+$/, '') + '_diagnostics_report.xlsx';
-            XLSX.writeFile(wb, outputName);
+
+            // Categorical
+            if (Object.keys(results.categorical).length > 0) {
+                const catData = [['Column', 'Unique Values', 'Case Variations']];
+                Object.entries(results.categorical).forEach(([col, d]) => {
+                    catData.push([col, d.valueCounts.size, d.caseVariations.length]);
+                });
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(catData), 'Categorical');
+            }
+
+            XLSX.writeFile(wb, fileName.replace(/\.[^.]+$/, '_diagnostics.xlsx'));
             showAlert('Report downloaded!', 'success');
         }
 
         function downloadIssuesCSV() {
-            if (diagnosticResults.issues.length === 0) {
+            if (results.issues.length === 0) {
                 showAlert('No issues to download!', 'info');
                 return;
             }
-            
-            const csv = Papa.unparse(diagnosticResults.issues);
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            
-            const outputName = fileName.replace(/\.[^/.]+$/, '') + '_issues.csv';
-            link.download = outputName;
-            link.click();
-            
+            const csv = Papa.unparse(results.issues);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName.replace(/\.[^.]+$/, '_issues.csv');
+            a.click();
             showAlert('Issues CSV downloaded!', 'success');
-        }
-
-        function backToConfig() {
-            document.getElementById('resultsSection').classList.add('hidden');
-            document.getElementById('configSection').classList.remove('hidden');
         }
 
         function resetAll() {
             rawData = null;
-            availableColumns = [];
-            columnTypes = {};
-            diagnosticResults = {};
-            fileName = '';
-
+            columns = [];
+            results = { numeric: {}, categorical: {}, issues: [], mixedColumns: {} };
+            corrections = { replacements: {}, deletions: {} };
             document.getElementById('uploadSection').classList.remove('hidden');
-            document.getElementById('configSection').classList.add('hidden');
             document.getElementById('processingSection').classList.add('hidden');
             document.getElementById('resultsSection').classList.add('hidden');
-            
             document.getElementById('dataFileInput').value = '';
             document.getElementById('dataFileName').textContent = '';
-            document.getElementById('alertContainer').innerHTML = '';
         }
     </script>
 </body>
